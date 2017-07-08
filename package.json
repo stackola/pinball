@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run web && node index.js",
-    "web": "browserify public/js/index.js > public/js/bundle.js"
+    "start": "npm run bundle && node index.js",
+    "watch": "watchify public/js/index.js -o public/js/bundle.js",
+    "bundle": "browserify public/js/index.js > public/js/bundle.js"
   },
   "author": "",
   "license": "ISC",
