@@ -1,11 +1,63 @@
 "use strict";
 exports.__esModule = true;
 var Ball_1 = require("./Ball");
+var InputController_1 = require("./InputController");
+var THREE = require("../../node_modules/three/build/three.js");
+var SpatialHash = require("../../node_modules/spatial-hash/index.js");
 var Game = (function () {
-    function Game(context) {
-        this.context = context;
-        this.ball = new Ball_1["default"]();
+    function Game() {
+        var WIDTH = 640;
+        var HEIGHT = 480;
+        var chunkSize = 15;
+        // Set some camera attributes.
+        // Create a WebGL renderer, camera
+        // and a scene
+        this.renderer = new THREE.WebGLRenderer();
+        this.spatialhash = new SpatialHash({
+            x: 0,
+            y: 0,
+            width: 10000,
+            height: 10000
+        }, 100);
+        var ASPECT = WIDTH / HEIGHT;
+        this.camera = new THREE.OrthographicCamera(-ASPECT * 5, ASPECT * 5, 5, -5, 0.1, 20000);
+        this.camera.zoom = 1;
+        this.camera.position.z = 10;
+        this.camera.updateProjectionMatrix();
+        this.scene = new THREE.Scene();
+        // var light = new THREE.PointLight(0xffffff);
+        // light.position.set(-100, 200, 100);
+        // this.floor.translateX(chunkSize / 2);
+        // this.floor.translateY(chunkSize / 2);
+        this.scene.add(this.camera);
+        // Geometry
+        var segments = 64;
+        var cbgeometry = new THREE.PlaneGeometry(5000, 5000, segments, segments);
+        // Materials
+        var cbmaterials = [];
+        cbmaterials.push(new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide }));
+        cbmaterials.push(new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }));
+        var l = cbgeometry.faces.length / 2; // <-- Right here. This should still be 8x8 (64)
+        for (var i = 0; i < l; i++) {
+            var j = i * 2; // <-- Added this back so we can do every other 'face'
+            cbgeometry.faces[j].materialIndex = ((i + Math.floor(i / segments)) % 2); // The code here is changed, replacing all 'i's with 'j's. KEEP THE 8
+            cbgeometry.faces[j + 1].materialIndex = ((i + Math.floor(i / segments)) % 2); // Add this line in, the material index should stay the same, we're just doing the other half of the same face
+        }
+        // Mesh
+        var cb = new THREE.Mesh(cbgeometry, new THREE.MeshFaceMaterial(cbmaterials));
+        cb.position.setZ(-1);
+        this.scene.add(cb);
+        //this.scene.add(light);
+        this.scene.add(new THREE.AxisHelper(5));
+        this.renderer.setSize(WIDTH, HEIGHT);
+        // Attach the renderer-supplied
+        // DOM element.
+        var container = document.querySelector('#container');
+        container.appendChild(this.renderer.domElement);
+        this.renderer.render(this.scene, this.camera);
         this.resize();
+        this.ball = new Ball_1["default"](this);
+        this.inputController = new InputController_1["default"](this.renderer.domElement, document);
         window.addEventListener('resize', this.resize.bind(this));
         this.loop();
     }
@@ -14,16 +66,35 @@ var Game = (function () {
             width: window.innerWidth,
             height: window.innerHeight
         };
-        this.context.canvas.width = this.viewport.width;
-        this.context.canvas.height = this.viewport.height;
+        var ASPECT = this.viewport.width / this.viewport.height;
+        this.camera.left = -this.viewport.width / 20;
+        this.camera.right = this.viewport.width / 20;
+        this.camera.top = this.viewport.height / 20;
+        this.camera.bottom = -this.viewport.height / 20;
+        this.renderer.setSize(this.viewport.width, this.viewport.height);
+        this.camera.updateProjectionMatrix();
     };
     Game.prototype.tick = function () {
         this.ball.tick();
+        var mp = this.inputController.getMousePosition();
+        var mpv = new THREE.Vector3(mp.x, mp.y, 0);
+        var camToBall = new THREE.Vector3().subVectors(this.camera.position, this.ball.circle.position);
+        console.log("camToBal2l ", camToBall);
+        //console.log(camToBall);
+        var rel = mpv;
+        //rel.sub(new THREE.Vector3(this.camera.position).multiplyScalar(2));
+        //rel.add(camToBall);
+        var camInv = new THREE.Vector3(this.camera.position.x, this.camera.position.y, 0);
+        camInv.setY(camInv.y * -1);
+        rel.add(camInv);
+        //rel.add(this.ball.circle.position);
+        var rel = rel.sub(camToBall);
+        rel.setX(rel.x - this.viewport.width / 2);
+        rel.setY(rel.y - this.viewport.height / 2);
+        console.log("relative ", rel);
     };
     Game.prototype.draw = function () {
-        this.context.fillStyle = "#ff1122";
-        this.context.fillRect(0, 0, this.viewport.width, this.viewport.height);
-        this.ball.draw(this.context);
+        this.renderer.render(this.scene, this.camera);
     };
     Game.prototype.loop = function () {
         requestAnimationFrame(this.loop.bind(this));

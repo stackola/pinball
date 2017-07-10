@@ -1,24 +1,31 @@
 "use strict";
 exports.__esModule = true;
-var Vector_1 = require("./Vector");
+var THREE = require("../../node_modules/three/build/three.js");
 var Ball = (function () {
-    function Ball() {
-        this.gravity = new Vector_1["default"](0, 1);
-        this.position = new Vector_1["default"](200, 200);
+    function Ball(g) {
+        this.velocity = new THREE.Vector3(0, 0, 0);
+        this.gravity = new THREE.Vector3(0, -0.01, 0);
+        this.game = g;
         console.log("balll created");
+        this.draw();
     }
     Ball.prototype.tick = function () {
-        this.position.add(this.gravity);
+        this.velocity.add(this.gravity);
+        if (this.velocity.y < -1) {
+            this.velocity.setY(-1);
+        }
+        this.circle.position.add(this.velocity);
+        //console.log(this.velocity);
+        this.game.camera.position.lerp(this.circle.position, 0.05);
+        this.game.camera.position.setZ(10);
+        //console.log(this.circle.position);
+        //console.log(this.game.camera.position);
     };
-    Ball.prototype.draw = function (context) {
-        context.beginPath();
-        context.arc(this.position.x, this.position.y, 20, 0, 2 * Math.PI, false);
-        context.fillStyle = 'green';
-        context.fill();
-        context.lineWidth = 1;
-        context.strokeStyle = '#003300';
-        context.stroke();
-        context.closePath();
+    Ball.prototype.draw = function () {
+        var geometry = new THREE.CircleGeometry(5, 32);
+        var material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        this.circle = new THREE.Mesh(geometry, material);
+        this.game.scene.add(this.circle);
     };
     return Ball;
 }());
