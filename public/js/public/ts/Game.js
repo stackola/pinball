@@ -3,7 +3,7 @@ exports.__esModule = true;
 var Ball_1 = require("./Ball");
 var InputController_1 = require("./InputController");
 var THREE = require("../../node_modules/three/build/three.js");
-var SpatialHash = require("../../node_modules/spatial-hash/index.js");
+var _1 = require("../../node_modules/spatial-hash/");
 var Game = (function () {
     function Game() {
         var WIDTH = 640;
@@ -13,7 +13,7 @@ var Game = (function () {
         // Create a WebGL renderer, camera
         // and a scene
         this.renderer = new THREE.WebGLRenderer();
-        this.spatialhash = new SpatialHash({
+        this.spatialhash = new _1["default"]({
             x: 0,
             y: 0,
             width: 10000,
@@ -57,7 +57,7 @@ var Game = (function () {
         this.renderer.render(this.scene, this.camera);
         this.resize();
         this.ball = new Ball_1["default"](this);
-        this.inputController = new InputController_1["default"](this.renderer.domElement, document);
+        this.inputController = new InputController_1["default"](this, this.renderer.domElement, document);
         window.addEventListener('resize', this.resize.bind(this));
         this.loop();
     }
@@ -77,21 +77,9 @@ var Game = (function () {
     Game.prototype.tick = function () {
         this.ball.tick();
         var mp = this.inputController.getMousePosition();
-        var mpv = new THREE.Vector3(mp.x, mp.y, 0);
-        var camToBall = new THREE.Vector3().subVectors(this.camera.position, this.ball.circle.position);
-        console.log("camToBal2l ", camToBall);
-        //console.log(camToBall);
-        var rel = mpv;
-        //rel.sub(new THREE.Vector3(this.camera.position).multiplyScalar(2));
-        //rel.add(camToBall);
-        var camInv = new THREE.Vector3(this.camera.position.x, this.camera.position.y, 0);
-        camInv.setY(camInv.y * -1);
-        rel.add(camInv);
-        //rel.add(this.ball.circle.position);
-        var rel = rel.sub(camToBall);
-        rel.setX(rel.x - this.viewport.width / 2);
-        rel.setY(rel.y - this.viewport.height / 2);
-        console.log("relative ", rel);
+        var relativeMouseVector = new THREE.Vector3(mp.x, mp.y, 0);
+        relativeMouseVector.sub(this.ball.circle.position); // vector points from ball to mouse;
+        this.ball.velocity.add(relativeMouseVector.setY(0).normalize().multiplyScalar(0.01));
     };
     Game.prototype.draw = function () {
         this.renderer.render(this.scene, this.camera);

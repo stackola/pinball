@@ -1,7 +1,7 @@
 import Ball from "./Ball";
 import InputController from "./InputController";
 var THREE = require("../../node_modules/three/build/three.js");
-//import * as SpatialHash from "../../node_modules/spatial-hash/index.js";
+var spatial = require( "../../node_modules/spatial-hash/index.js");
 export default class Game{	
 	viewport:{width:number, height:number};
 	ball:Ball;
@@ -20,12 +20,12 @@ export default class Game{
 		// and a scene
 		this.renderer = new THREE.WebGLRenderer();
 
-		/*this.spatialhash = new SpatialHash({
+		this.spatialhash = new spatial({
 			x: 0,
 			y: 0,
 			width: 10000,
 			height: 10000
-		}, 100);*/
+		}, 100);
 		var ASPECT = WIDTH / HEIGHT;
 		this.camera = new THREE.OrthographicCamera(-ASPECT * 5, ASPECT * 5, 5, -5, 0.1, 20000);
 		this.camera.zoom = 1;

@@ -3,7 +3,7 @@ exports.__esModule = true;
 var Ball_1 = require("./Ball");
 var InputController_1 = require("./InputController");
 var THREE = require("../../node_modules/three/build/three.js");
-//import * as SpatialHash from "../../node_modules/spatial-hash/index.js";
+var spatial = require("../../node_modules/spatial-hash/index.js");
 var Game = (function () {
     function Game() {
         var WIDTH = 640;
@@ -13,12 +13,12 @@ var Game = (function () {
         // Create a WebGL renderer, camera
         // and a scene
         this.renderer = new THREE.WebGLRenderer();
-        /*this.spatialhash = new SpatialHash({
+        this.spatialhash = new spatial({
             x: 0,
             y: 0,
             width: 10000,
             height: 10000
-        }, 100);*/
+        }, 100);
         var ASPECT = WIDTH / HEIGHT;
         this.camera = new THREE.OrthographicCamera(-ASPECT * 5, ASPECT * 5, 5, -5, 0.1, 20000);
         this.camera.zoom = 1;

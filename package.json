@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm run bundle && node index.js",
+    "start": "npm run bundle && node js/index.js",
     "watch": "watchify public/js/index.js -o public/js/bundle.js",
     "bundle": "browserify public/js/index.js > public/js/bundle.js"
   },
@@ -13,7 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.3",
+    "polygon-collision": "0.0.1",
     "socket.io": "^2.0.3",
-    "spatial-hash": "0.0.4"
+    "spatialhash-2d": "^1.0.31"
+  },
+  "devDependencies": {
+    "@types/socket.io": "^1.4.29"
   }
 }
