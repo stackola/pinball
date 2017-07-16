@@ -1,5 +1,5 @@
 const SpatialHash = require('spatialhash-2d');
-const collision = require('polygon-collision');
+const collision = require('../../modules/collision/collision').collision;
 import Player from "./Player";
 export default class Map {
 	hash: any;
@@ -20,7 +20,7 @@ export default class Map {
 		this.hash = new SpatialHash(this.range, this.bucketSize);
 
 		var m = new Player({x:1,y:1}, 10);	
-		var m2 = new Player({x:25,y:20}, 10);	
+		var m2 = new Player({x:4,y:4}, 10);	
 		console.log(m);
 
 		console.log(collision(m,m2));

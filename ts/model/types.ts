@@ -15,9 +15,9 @@ interface ISpatial {
 }
 
 interface ICollidable{
-	type: IShapeType,
+	shape: IShapeType,
 	points: Array < iXYObj > ,
-	r: number | null
+	radius: number | null
 }
 
 export type Collidable = ICollidable;

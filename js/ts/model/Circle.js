@@ -3,9 +3,9 @@ exports.__esModule = true;
 var Circle = (function () {
     function Circle(position, r) {
         this.__b = undefined;
-        this.shape = "circle";
+        this.type = "circle";
         this.position = position;
-        this.radius = r;
+        this.r = r;
         this.range = {
             x: this.position.x - r,
             y: this.position.y - r,
@@ -18,22 +18,22 @@ var Circle = (function () {
         return JSON.stringify(this);
     };
     Circle.prototype.setRadius = function (newRadius) {
-        this.radius = newRadius;
+        this.r = newRadius;
         this.range = {
-            x: this.position.x - this.radius,
-            y: this.position.y - this.radius,
-            w: this.radius * 2,
-            h: this.radius * 2
+            x: this.position.x - this.r,
+            y: this.position.y - this.r,
+            w: this.r * 2,
+            h: this.r * 2
         };
     };
     Circle.prototype.move = function (newPos) {
         this.position = newPos;
         this.points = [this.position];
         this.range = {
-            x: this.position.x - this.radius,
-            y: this.position.y - this.radius,
-            w: this.radius * 2,
-            h: this.radius * 2
+            x: this.position.x - this.r,
+            y: this.position.y - this.r,
+            w: this.r * 2,
+            h: this.r * 2
         };
     };
     return Circle;

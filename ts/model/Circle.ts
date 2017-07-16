@@ -15,13 +15,13 @@ export default class Circle implements Collidable, Spatial{
 	}
 	__b: undefined | number = undefined;
 
-	type: ShapeType = "circle";
+	shape: ShapeType = "circle";
 	points: Array < XYObj >
-	r: number | null
+	radius: number | null
 	position: XYObj
 	constructor(position:XYObj,r){
 		this.position = position;
-		this.r=r;
+		this.radius=r;
 		this.range={
 			x: this.position.x-r,
 			y: this.position.y-r,
@@ -34,22 +34,22 @@ export default class Circle implements Collidable, Spatial{
 		return JSON.stringify(this);
 	}
 	setRadius(newRadius:number){
-		this.r=newRadius;
+		this.radius=newRadius;
 		this.range={
-			x: this.position.x-this.r,
-			y: this.position.y-this.r,
-			w: this.r*2,
-			h: this.r*2
+			x: this.position.x-this.radius,
+			y: this.position.y-this.radius,
+			w: this.radius*2,
+			h: this.radius*2
 		}
 	}
 	move(newPos:XYObj){
 		this.position=newPos;		
 		this.points= [this.position];
 		this.range={
-			x: this.position.x-this.r,
-			y: this.position.y-this.r,
-			w: this.r*2,
-			h: this.r*2
+			x: this.position.x-this.radius,
+			y: this.position.y-this.radius,
+			w: this.radius*2,
+			h: this.radius*2
 		}
 	}
 }
