@@ -19,24 +19,24 @@ export default class Map {
 	constructor() {
 		this.hash = new SpatialHash(this.range, this.bucketSize);
 
-		var m = new Player({
-			x: 1,
-			y: 1
-		}, 10);
-		var m2 = new Player({
-			x: 50,
-			y: 50
-		}, 10);
-		this.hash.insert(m);
-		this.hash.insert(m2);
-		console.log("item count", this.hash.itemCount);
-		console.log("query", this.hash.query({
-			x: 0,
-			y: 0,
-			w: 1,
-			h: 1
-		}));
+		// var m = new Player({
+		// 	x: 1,
+		// 	y: 1
+		// }, 10);
+		// var m2 = new Player({
+		// 	x: 50,
+		// 	y: 50
+		// }, 10);
+		// this.hash.insert(m);
+		// this.hash.insert(m2);
+		// console.log("item count", this.hash.itemCount);
+		// console.log("query", this.hash.query({
+		// 	x: 0,
+		// 	y: 0,
+		// 	w: 1,
+		// 	h: 1
+		// }));
 		
-		console.log(collision(m, m2));
+		//console.log(collision(m, m2));
 	}
 }

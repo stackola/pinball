@@ -7,4 +7,7 @@ export default class Game{
 	var m = new Map();
 	
 	}
+	move(){
+		
+	}
 }

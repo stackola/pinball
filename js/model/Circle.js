@@ -3,6 +3,7 @@ exports.__esModule = true;
 var Circle = (function () {
     function Circle(position, r) {
         this.__b = undefined;
+        this.hasCollided = false;
         this.shape = "circle";
         this.position = position;
         this.radius = r;
